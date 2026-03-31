@@ -12,5 +12,5 @@
   "observability": {
     "enabled": true,
   },
-  "main": "app/page.tsx",
+  "main": ".open-next/worker.js",
 }
