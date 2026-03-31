@@ -10,7 +10,9 @@ export function CheckboxField({
   value,
   onChange,
 }: FieldComponentProps) {
-  const arrayValue = Array.isArray(value) ? value : [];
+  const arrayValue = Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
 
   return (
     <div key={`${responseKey}-container`} className="space-y-3">
