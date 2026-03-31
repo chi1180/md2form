@@ -218,6 +218,30 @@ export default function PlaygroundPage() {
   const [submitPreviewOpen, setSubmitPreviewOpen] = useState(false);
   const [submittedPayloadJson, setSubmittedPayloadJson] = useState<string>("");
 
+  const toSerializable = (input: unknown): unknown => {
+    if (typeof File !== "undefined" && input instanceof File) {
+      return {
+        name: input.name,
+        size: input.size,
+        type: input.type,
+        lastModified: input.lastModified,
+      };
+    }
+
+    if (Array.isArray(input)) {
+      return input.map((item) => toSerializable(item));
+    }
+
+    if (input && typeof input === "object") {
+      const entries = Object.entries(input as Record<string, unknown>).map(
+        ([key, value]) => [key, toSerializable(value)],
+      );
+      return Object.fromEntries(entries);
+    }
+
+    return input;
+  };
+
   const handleMarkdownChange = (nextMarkdown: string) => {
     if (nextMarkdown.trim().length === 0) {
       setMarkdown(DEFAULT_FORM_FRONTMATTER_MARKDOWN);
@@ -298,7 +322,10 @@ export default function PlaygroundPage() {
               <FormRenderer
                 formData={formData}
                 onSubmit={(payload) => {
-                  setSubmittedPayloadJson(JSON.stringify(payload, null, 2));
+                  const serializablePayload = toSerializable(payload);
+                  setSubmittedPayloadJson(
+                    JSON.stringify(serializablePayload, null, 2),
+                  );
                   setSubmitPreviewOpen(true);
                 }}
               />
