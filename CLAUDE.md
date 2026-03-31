@@ -1,0 +1,75 @@
+# md2form Project Context
+
+This file provides context for AI assistants working on the md2form project.
+
+## Design Context
+
+### Users
+md2form serves both technical and non-technical users who need to create complex forms efficiently. Primary users include:
+- **Developers** integrating forms into applications who prefer code-based workflows
+- **Researchers and technical writers** who are comfortable with Markdown
+- **Form creators** who want speed and precision over clicking through form builders
+
+Users come to md2form frustrated with traditional form builders like Google Forms that require excessive pointing and clicking. They want to create complex, multi-step forms as quickly as they can write Markdown. The context of use is focused, task-oriented work where efficiency matters.
+
+### Brand Personality
+**Modern • Efficient • Simple**
+
+md2form embodies calm productivity. It's a tool that gets out of your way and lets you work at the speed of thought. The interface should evoke:
+- **Zen-like clarity**: Clean, minimal, uncluttered
+- **Quiet confidence**: Powerful capabilities without overwhelming the user
+- **Flow state**: Smooth interactions that don't interrupt focus
+
+### Aesthetic Direction
+
+**Visual Tone**: Notion-inspired minimalism with purposeful restraint
+
+**Reference**: [md2form documentation](https://md2form-document.pages.dev/) sets the tone - clean, documentation-focused, no visual noise.
+
+**Color Philosophy**:
+- Base palette remains neutral (grays) for maximum clarity and timelessness
+- Introduce a **Notion-style accent color** for interactive elements and key actions
+- Notion uses a warm, approachable palette (beiges, soft browns) in light mode and rich, comfortable darks in dark mode
+- Avoid bright, saturated colors - prefer muted, sophisticated tones
+- Both light and dark modes are first-class citizens
+
+**Typography**: Continue with Geist Sans - it's modern, highly legible, and pairs well with code/markdown content
+
+**Spatial Philosophy**: Generous whitespace, clear visual breathing room, structured hierarchy through spacing rather than decoration
+
+**What to avoid**:
+- Overly colorful, playful designs (not a toy or consumer product)
+- Dense, cluttered interfaces (antithesis of efficiency)
+- Aggressive, attention-grabbing patterns (should feel calm, not stimulating)
+- Heavy shadows, gradients, or visual effects (maintain flatness and clarity)
+
+### Design Principles
+
+1. **Efficiency Over Beauty**: Every design decision must serve speed and clarity. If an element doesn't help users complete their task faster, question its existence.
+
+2. **Respectful Minimalism**: Remove everything unnecessary, but what remains should feel intentional and crafted, not stark or incomplete.
+
+3. **Text-First Thinking**: Since md2form is fundamentally about text (Markdown), the interface should honor typographic hierarchy, readability, and content over chrome.
+
+4. **Calm Technology**: Animations and interactions should be subtle and purposeful. Reduce cognitive load. Support focus, not distraction.
+
+5. **Progressive Disclosure**: Show complexity only when needed. The path from simple to advanced should be natural and unforced.
+
+### Accessibility
+
+- **WCAG AA compliance** for color contrast and interactive elements
+- Respect `prefers-reduced-motion` for major animations and transitions
+- Keyboard navigation must be first-class
+- Form elements must be properly labeled for screen readers
+- Dark mode should be equally accessible as light mode
+
+### Technical Context
+
+**Stack**: Next.js 15, React 19, TypeScript, Tailwind CSS, shadcn/ui (New York style)
+
+**Design System**: Built on shadcn/ui's CSS variable system for theming. The "New York" style (more refined, tighter spacing) aligns well with md2form's minimal aesthetic.
+
+**Theme Strategy**: 
+- Light mode: Soft, warm neutrals with Notion-inspired accents
+- Dark mode: Rich, comfortable darks (not pure black)
+- System preference detection enabled by default
