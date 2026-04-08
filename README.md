@@ -27,6 +27,29 @@ npm install
 npm run dev
 ```
 
+### Supabase環境変数
+
+フォーム管理・公開回答機能を使う場合は、`.env.example` をコピーして `.env.local` を作成し、以下を設定してください。
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SITE_URL`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `STRIPE_PRICE_PRO_MONTHLY`
+
+設定例:
+
+```bash
+cp .env.example .env.local
+```
+
+`/forms` や `/f/[slug]` を使う場合は必須です。  
+プレイグラウンドのみ利用する場合は未設定でも起動できます。
+
+有料プラン機能を使う場合は、Stripe Dashboard 側で `price` と Webhook endpoint を作成してから上記の Stripe 環境変数を設定してください。
+
 起動後、`http://localhost:3000` にアクセスします。  
 プレイグラウンドは `http://localhost:3000/playground` です。
 

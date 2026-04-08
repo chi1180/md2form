@@ -20,6 +20,7 @@ export function SignatureField({
   const [mode, setMode] = useState<"draw" | "upload">(
     element.captureMode === "upload" ? "upload" : "draw",
   );
+  const allowUploadMode = element.captureMode === "upload";
   const [signatureDataUrl, setSignatureDataUrl] = useState(
     typeof value === "string" ? value : "",
   );
@@ -49,14 +50,18 @@ export function SignatureField({
           {questionTitle}
           {element.required && <span className="text-destructive ml-1">*</span>}
         </Label>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={() => setMode((prev) => (prev === "draw" ? "upload" : "draw"))}
-        >
-          {mode === "draw" ? "Use signature file" : "Draw signature"}
-        </Button>
+        {allowUploadMode && (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              setMode((prev) => (prev === "draw" ? "upload" : "draw"))
+            }
+          >
+            {mode === "draw" ? "Use signature file" : "Draw signature"}
+          </Button>
+        )}
       </div>
 
       {mode === "upload" ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,6 +55,9 @@ export interface FormData {
 
 interface FormRendererProps {
   formData: FormData;
+  disableFileUpload?: boolean;
+  pageIndex?: number;
+  onPageIndexChange?: (pageIndex: number) => void;
   onSubmit?: (payload: {
     formId: string;
     title: string;
@@ -66,17 +69,43 @@ interface FormRendererProps {
       answer: ResponseValue | undefined;
       [key: string]: unknown;
     }>;
-  }) => void;
+  }) => void | Promise<void>;
 }
 
-export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
+export function FormRenderer({
+  formData,
+  onSubmit,
+  disableFileUpload = false,
+  pageIndex,
+  onPageIndexChange,
+}: FormRendererProps) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, ResponseValue>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const currentPage = formData.pages[currentPageIndex];
   const totalPages = formData.pages.length;
   const isLastPage = currentPageIndex === totalPages - 1;
   const isFirstPage = currentPageIndex === 0;
+
+  useEffect(() => {
+    const maxPageIndex = Math.max(formData.pages.length - 1, 0);
+    setCurrentPageIndex((prev) => Math.min(prev, maxPageIndex));
+  }, [formData.pages.length]);
+
+  useEffect(() => {
+    if (typeof pageIndex !== "number") {
+      return;
+    }
+
+    const maxPageIndex = Math.max(formData.pages.length - 1, 0);
+    const clamped = Math.max(0, Math.min(pageIndex, maxPageIndex));
+    setCurrentPageIndex(clamped);
+  }, [formData.pages.length, pageIndex]);
+
+  useEffect(() => {
+    onPageIndexChange?.(currentPageIndex);
+  }, [currentPageIndex, onPageIndexChange]);
 
   const handleInputChange = (elementId: string, value: ResponseValue) => {
     setResponses((prev) => ({ ...prev, [elementId]: value }));
@@ -100,8 +129,12 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
   const getFieldId = (element: FormElement, index: number) =>
     element.id || `field-${currentPageIndex}-${index}`;
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (submitting) {
+      return;
+    }
 
     if (!currentPage) {
       toast.error("No form page available.");
@@ -267,6 +300,11 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
       }
 
       if (element.type === "file_upload") {
+        if (disableFileUpload) {
+          nextResponses[responseKey] = [];
+          return;
+        }
+
         const files = submittedData.getAll(responseKey).filter((item) => item instanceof File) as File[];
 
         if (element.required && files.length === 0) {
@@ -390,9 +428,16 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
       responses: responseItems,
     };
 
-    console.log("Form submitted:", payload);
-    onSubmit?.(payload);
-    toast.success("Form submitted successfully.");
+    try {
+      setSubmitting(true);
+      await onSubmit?.(payload);
+      toast.success("Form submitted successfully.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to submit form.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const renderElement = (element: FormElement, index: number) => {
@@ -457,6 +502,19 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
         return <ScaleField key={`${responseKey}-container`} {...commonProps} />;
 
       case "file_upload":
+        if (disableFileUpload) {
+          return (
+            <div
+              key={`${responseKey}-container`}
+              className="rounded-md border border-border bg-muted/30 p-4"
+            >
+              <p className="text-sm text-muted-foreground">
+                File upload is not available in this public form.
+              </p>
+            </div>
+          );
+        }
+
         return <FileUploadField key={`${responseKey}-container`} {...commonProps} />;
 
       case "signature":
@@ -488,7 +546,7 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <Card className="border-border shadow-sm">
+      <Card className="relative border-border shadow-sm">
         {totalPages === 0 && formData.title.length === 0 ? (
           <CardContent className="py-8">
             <p className="text-sm text-muted-foreground">
@@ -553,6 +611,7 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
                         type="button"
                         variant="outline"
                         onClick={handlePrevious}
+                        disabled={submitting}
                       >
                         Previous
                       </Button>
@@ -561,9 +620,13 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
                   {currentPage?.elements.length > 0 && (
                     <div>
                       {!isLastPage ? (
-                        <Button type="submit">Next</Button>
+                        <Button type="submit" disabled={submitting}>
+                          Next
+                        </Button>
                       ) : (
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" disabled={submitting}>
+                          Submit
+                        </Button>
                       )}
                     </div>
                   )}
@@ -571,6 +634,13 @@ export function FormRenderer({ formData, onSubmit }: FormRendererProps) {
               </form>
             </CardContent>
           </>
+        )}
+        {submitting && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center rounded-xl bg-background/80 backdrop-blur-[1px]">
+            <div className="rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground shadow-sm">
+              Sending...
+            </div>
+          </div>
         )}
       </Card>
     </div>

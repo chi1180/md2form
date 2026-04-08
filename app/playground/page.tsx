@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { parseMarkdownToForm } from "md2form";
@@ -16,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const DEFAULT_MARKDOWN = `${DEFAULT_FORM_FRONTMATTER_MARKDOWN}
 # md2form Full Feature Playground
@@ -287,6 +289,11 @@ export default function PlaygroundPage() {
               <p className="text-sm text-muted-foreground mt-1">
                 Write markdown on the right, see your form come to life on the left
               </p>
+              <div className="mt-3">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/">Back to Home</Link>
+                </Button>
+              </div>
             </div>
             <div className="text-xs text-muted-foreground space-y-1 text-right">
               <div className="flex items-center gap-2">
