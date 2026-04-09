@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter, Noto_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -7,15 +7,26 @@ import "./globals.css";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION ?? "NO_TOKEN";
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Md2Form",
+  description:
+    "Write forms in Markdown, share instantly, and analyze responses.",
+  verification: {
+    google: googleVerification,
+  },
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const InterFont = Inter({
+  variable: "--font-inter",
+  display: "swap",
+  subsets: ["latin"],
+});
+
+const Noto_SansFont = Noto_Sans({
+  variable: "--font-noto-sans",
   display: "swap",
   subsets: ["latin"],
 });
@@ -27,7 +38,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body
+        className={`${InterFont.className} ${Noto_SansFont.className} ${InterFont.variable} ${Noto_SansFont.variable} antialiased`}
+        style={{
+          fontFamily: `var(--font-inter), var(--font-noto-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        }}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
