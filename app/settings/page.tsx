@@ -23,6 +23,8 @@ export default function SettingsPage() {
   const [formCount, setFormCount] = useState(0);
   const [planTier, setPlanTier] = useState<PlanTier>("free");
   const [billingStatus, setBillingStatus] = useState<string>("none");
+  const [currentPeriodEnd, setCurrentPeriodEnd] = useState<string | null>(null);
+  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
   const [redirectingBilling, setRedirectingBilling] = useState(false);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function SettingsPage() {
 
       const { data: profile } = await supabase
         .from("user_profiles")
-        .select("billing_status,plan_tier")
+        .select("billing_status,plan_tier,current_period_end,cancel_at_period_end")
         .eq("user_id", authUser.id)
         .maybeSingle();
 
@@ -82,6 +84,12 @@ export default function SettingsPage() {
       setBillingStatus(
         typeof profile?.billing_status === "string" ? profile.billing_status : "none",
       );
+
+      setCurrentPeriodEnd(
+        typeof profile?.current_period_end === "string" ? profile.current_period_end : null,
+      );
+
+      setCancelAtPeriodEnd(profile?.cancel_at_period_end === true);
     }
 
     load().catch(() => {
@@ -178,6 +186,16 @@ export default function SettingsPage() {
             </p>
             <p>
               <span className="text-muted-foreground">Billing status:</span> {billingStatus}
+            </p>
+            <p>
+              <span className="text-muted-foreground">Current period end:</span>{" "}
+              {currentPeriodEnd
+                ? new Date(currentPeriodEnd).toLocaleString()
+                : "Not available"}
+            </p>
+            <p>
+              <span className="text-muted-foreground">Auto-renew:</span>{" "}
+              {cancelAtPeriodEnd ? "Off (cancels at period end)" : "On"}
             </p>
             <p className="text-muted-foreground">
               Use upgrade/manage billing to change your plan.
