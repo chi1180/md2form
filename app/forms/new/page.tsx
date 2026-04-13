@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FormBuilder } from "@/components/forms/form-builder";
+import { PageLoading } from "@/components/page-loading";
 import { DEFAULT_BUILDER_MARKDOWN } from "@/lib/default-markdown";
 import { getFormLimitByPlan, type PlanTier } from "@/lib/plans";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,7 @@ export default function NewFormPage() {
   }, [router]);
 
   if (!ready) {
-    return null;
+    return <PageLoading message="Preparing form builder..." />;
   }
 
   return (

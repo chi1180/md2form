@@ -15,6 +15,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CardLoadingSkeleton } from "@/components/card-loading-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TimelinePoint {
@@ -132,13 +133,7 @@ export function FormAnalyticsView({
   }, [payload]);
 
   if (loading) {
-    return (
-      <Card>
-        <CardContent className="py-8 text-sm text-muted-foreground">
-          Loading analytics...
-        </CardContent>
-      </Card>
-    );
+    return <CardLoadingSkeleton rows={5} />;
   }
 
   if (error || !payload) {

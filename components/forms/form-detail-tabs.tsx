@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { CircleUserRound } from "lucide-react";
 import { FormBuilder } from "@/components/forms/form-builder";
 import { FormResponsesView } from "@/components/forms/form-responses-view";
+import { PageLoading } from "@/components/page-loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -144,7 +145,7 @@ export function FormDetailTabs({ formId, tab }: FormDetailTabsProps) {
   };
 
   if (!ready) {
-    return null;
+    return <PageLoading message="Loading form editor..." className="min-h-[60vh]" />;
   }
 
   return (

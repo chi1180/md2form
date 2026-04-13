@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import { PageLoading } from "@/components/page-loading";
 import { FormDetailTabs } from "@/components/forms/form-detail-tabs";
 
 type TabKey = "questions" | "responses" | "settings";
@@ -16,7 +17,7 @@ function toTabKey(value: string | null): TabKey {
 
 export default function FormDetailPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<PageLoading message="Loading form details..." />}>
       <FormDetailPageInner />
     </Suspense>
   );
@@ -28,7 +29,7 @@ function FormDetailPageInner() {
   const formId = params.id;
 
   if (!formId) {
-    return null;
+    return <PageLoading message="Loading form details..." />;
   }
 
   const tab = toTabKey(searchParams.get("tab"));

@@ -2,11 +2,12 @@
 
 import { Suspense } from "react";
 import { useParams } from "next/navigation";
+import { PageLoading } from "@/components/page-loading";
 import { PublicFormView } from "@/components/forms/public-form-view";
 
 export default function PublicFormPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<PageLoading message="Loading form..." />}>
       <PublicFormPageInner />
     </Suspense>
   );
@@ -17,7 +18,7 @@ function PublicFormPageInner() {
   const slug = params.slug;
 
   if (!slug) {
-    return null;
+    return <PageLoading message="Loading form..." />;
   }
 
   return (

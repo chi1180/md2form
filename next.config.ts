@@ -1,19 +1,27 @@
 import type { NextConfig } from "next";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline'",
+  isProduction
+    ? "script-src 'self' 'unsafe-inline'"
+    : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https:",
+  isProduction
+    ? "connect-src 'self' https:"
+    : "connect-src 'self' https: ws: wss:",
   "frame-src 'self' https:",
-  "upgrade-insecure-requests",
-].join("; ");
+  isProduction ? "upgrade-insecure-requests" : null,
+]
+  .filter(Boolean)
+  .join("; ");
 
 const nextConfig: NextConfig = {
   cacheComponents: true,

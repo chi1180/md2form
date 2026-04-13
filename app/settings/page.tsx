@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthNav } from "@/components/auth-nav";
+import { PageLoading } from "@/components/page-loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -105,7 +106,7 @@ export default function SettingsPage() {
   }, [router]);
 
   if (loading) {
-    return null;
+    return <PageLoading message="Loading settings..." />;
   }
 
   const handleUpgrade = async () => {

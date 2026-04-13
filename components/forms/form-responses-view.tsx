@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { CardLoadingSkeleton } from "@/components/card-loading-skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -204,13 +205,7 @@ export function FormResponsesView({
   }, [individualIndex, responses]);
 
   if (loading) {
-    return (
-      <Card>
-        <CardContent className="py-8 text-sm text-muted-foreground">
-          Loading responses...
-        </CardContent>
-      </Card>
-    );
+    return <CardLoadingSkeleton rows={5} />;
   }
 
   if (error) {

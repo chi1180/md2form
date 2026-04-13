@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthNav } from "@/components/auth-nav";
+import { PageLoading } from "@/components/page-loading";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { getFormLimitByPlan, type PlanTier } from "@/lib/plans";
 
@@ -87,7 +88,7 @@ export default function DashboardPage() {
   }, [router]);
 
   if (loading) {
-    return null;
+    return <PageLoading message="Loading dashboard..." />;
   }
 
   const totalResponses = forms.reduce((sum, form) => sum + form.response_count, 0);

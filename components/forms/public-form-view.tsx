@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { CardLoadingSkeleton } from "@/components/card-loading-skeleton";
 import { FormRenderer, type FormData } from "@/components/form-renderer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -120,13 +121,7 @@ export function PublicFormView({ slug }: PublicFormViewProps) {
   }, [form]);
 
   if (loading) {
-    return (
-      <Card>
-        <CardContent className="py-10 text-sm text-muted-foreground">
-          Loading form...
-        </CardContent>
-      </Card>
-    );
+    return <CardLoadingSkeleton rows={4} />;
   }
 
   if (error || !form) {

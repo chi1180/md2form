@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { CardLoadingSkeleton } from "@/components/card-loading-skeleton";
 import { MarkdownEditor } from "@/components/markdown-editor";
 import { FormRenderer, type FormData } from "@/components/form-renderer";
 import { Button } from "@/components/ui/button";
@@ -259,7 +260,7 @@ export function FormBuilder({
               }}
             />
           ) : (
-            <p className="text-sm text-muted-foreground">Loading preview...</p>
+            <CardLoadingSkeleton rows={6} />
           )}
         </div>
       </div>
