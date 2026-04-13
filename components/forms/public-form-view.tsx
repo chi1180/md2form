@@ -89,7 +89,8 @@ export function PublicFormView({ slug }: PublicFormViewProps) {
         return;
       }
 
-      const message = err instanceof Error ? err.message : "Failed to load form.";
+      const message =
+        err instanceof Error ? err.message : "Failed to load form.";
       setError(message);
       setLoading(false);
     });
@@ -216,22 +217,38 @@ export function PublicFormView({ slug }: PublicFormViewProps) {
                 }),
               },
             );
-            const uploadUrlJson = await uploadUrlResponse.json().catch(() => null);
+            const uploadUrlJson = await uploadUrlResponse
+              .json()
+              .catch(() => null);
 
             if (!uploadUrlResponse.ok) {
-              throw new Error(uploadUrlJson?.error || "Failed to prepare signature upload.");
+              throw new Error(
+                uploadUrlJson?.error || "Failed to prepare signature upload.",
+              );
             }
 
             const uploadPayload = uploadUrlJson as UploadUrlPayload;
+
+            if (uploadPayload.path.includes("..")) {
+              throw new Error("Invalid file path");
+            }
+
             const { error: uploadError } = await supabase.storage
               .from("signatures")
-              .uploadToSignedUrl(uploadPayload.path, uploadPayload.token, blob, {
-                contentType: "image/png",
-                upsert: false,
-              });
+              .uploadToSignedUrl(
+                uploadPayload.path,
+                uploadPayload.token,
+                blob,
+                {
+                  contentType: "image/png",
+                  upsert: false,
+                },
+              );
 
             if (uploadError) {
-              throw new Error(uploadError.message || "Failed to upload signature.");
+              throw new Error(
+                uploadError.message || "Failed to upload signature.",
+              );
             }
 
             signaturePathByQuestionKey.set(questionKey, uploadPayload.path);
@@ -250,8 +267,8 @@ export function PublicFormView({ slug }: PublicFormViewProps) {
                   response.type === "signature"
                     ? signaturePathByQuestionKey.get(questionKey) || null
                     : response.type === "file_upload"
-                    ? null
-                    : response.answer,
+                      ? null
+                      : response.answer,
               };
             }),
           };

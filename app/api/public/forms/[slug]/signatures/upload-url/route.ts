@@ -14,22 +14,40 @@ export async function POST(request: Request, { params }: Params) {
   const questionKey =
     body && typeof body.questionKey === "string" ? body.questionKey : null;
   const responseId =
-    body && typeof body.responseId === "string" ? body.responseId : crypto.randomUUID();
+    body && typeof body.responseId === "string"
+      ? body.responseId
+      : crypto.randomUUID();
 
   if (!questionKey || questionKey.trim().length === 0) {
-    return NextResponse.json({ error: "questionKey is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "questionKey is required" },
+      { status: 400 },
+    );
   }
 
   const contentType =
-    body && typeof body.contentType === "string" ? body.contentType : "image/png";
-  const byteSize = body && typeof body.byteSize === "number" ? body.byteSize : 0;
+    body && typeof body.contentType === "string"
+      ? body.contentType
+      : "image/png";
+  const byteSize =
+    body && typeof body.byteSize === "number" ? body.byteSize : 0;
 
   if (contentType !== "image/png") {
-    return NextResponse.json({ error: "Only image/png is supported" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Only image/png is supported" },
+      { status: 400 },
+    );
   }
 
-  if (!Number.isFinite(byteSize) || byteSize <= 0 || byteSize > 2 * 1024 * 1024) {
-    return NextResponse.json({ error: "Signature size must be 1B to 2MB" }, { status: 400 });
+  if (
+    !Number.isFinite(byteSize) ||
+    byteSize <= 0 ||
+    byteSize > 2 * 1024 * 1024
+  ) {
+    return NextResponse.json(
+      { error: "Signature size must be 1B to 2MB" },
+      { status: 400 },
+    );
   }
 
   const supabase = await createSupabaseServerClient();
@@ -53,11 +71,19 @@ export async function POST(request: Request, { params }: Params) {
 
   const safeQuestionKey = toStorageQuestionKey(questionKey);
   if (!safeQuestionKey) {
-    return NextResponse.json({ error: "Invalid question key" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid question key" },
+      { status: 400 },
+    );
   }
 
   const objectPath = `${form.id}/${responseId}/${safeQuestionKey}.png`;
   const serviceRole = createSupabaseServiceRoleClient();
+
+  if (objectPath.includes("..")) {
+    throw new Error("Invalid file path");
+  }
+
   const { data, error } = await serviceRole.storage
     .from("signatures")
     .createSignedUploadUrl(objectPath);

@@ -11,7 +11,10 @@ function isSignaturePath(value: unknown): value is string {
   return typeof value === "string" && value.split("/").length >= 3;
 }
 
-function shouldReplaceTitleWithMeta(currentTitle: unknown, questionKey: string) {
+function shouldReplaceTitleWithMeta(
+  currentTitle: unknown,
+  questionKey: string,
+) {
   if (typeof currentTitle !== "string") {
     return true;
   }
@@ -81,7 +84,10 @@ export async function GET(_: Request, { params }: Params) {
             return null;
           }
 
-          if (item.question_type !== "signature" || !isSignaturePath(item.answer)) {
+          if (
+            item.question_type !== "signature" ||
+            !isSignaturePath(item.answer)
+          ) {
             return answer;
           }
 
@@ -90,6 +96,10 @@ export async function GET(_: Request, { params }: Params) {
               ? questionMetaMap.get(item.question_key)
               : null;
 
+          if (item.answer.includes("..")) {
+            throw new Error("Invalid file path");
+          }
+
           const { data: signed } = await serviceRole.storage
             .from("signatures")
             .createSignedUrl(item.answer, 60 * 60);
@@ -97,7 +107,8 @@ export async function GET(_: Request, { params }: Params) {
           return {
             ...item,
             title:
-              meta && shouldReplaceTitleWithMeta(item.title, String(item.question_key))
+              meta &&
+              shouldReplaceTitleWithMeta(item.title, String(item.question_key))
                 ? meta.title
                 : item.title,
             signed_url: signed?.signedUrl || null,
@@ -105,7 +116,9 @@ export async function GET(_: Request, { params }: Params) {
         }),
       );
 
-      const filteredAnswers = resolvedAnswers.filter((answer) => answer !== null);
+      const filteredAnswers = resolvedAnswers.filter(
+        (answer) => answer !== null,
+      );
 
       const withTitles = filteredAnswers.map((answer) => {
         const item = answer as Record<string, unknown>;
@@ -129,9 +142,13 @@ export async function GET(_: Request, { params }: Params) {
         const left = a as Record<string, unknown>;
         const right = b as Record<string, unknown>;
         const leftOrder =
-          typeof left._order === "number" ? left._order : Number.MAX_SAFE_INTEGER;
+          typeof left._order === "number"
+            ? left._order
+            : Number.MAX_SAFE_INTEGER;
         const rightOrder =
-          typeof right._order === "number" ? right._order : Number.MAX_SAFE_INTEGER;
+          typeof right._order === "number"
+            ? right._order
+            : Number.MAX_SAFE_INTEGER;
 
         return leftOrder - rightOrder;
       });

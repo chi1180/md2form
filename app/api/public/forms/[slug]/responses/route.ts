@@ -40,7 +40,9 @@ function isRateLimited(ip: string, slug: string) {
   const key = `${ip}:${slug}`;
   const now = Date.now();
   const existing = rateLimitByIpAndSlug.get(key) || [];
-  const activeWindow = existing.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
+  const activeWindow = existing.filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
+  );
 
   if (activeWindow.length >= RATE_LIMIT_MAX_REQUESTS) {
     rateLimitByIpAndSlug.set(key, activeWindow);
@@ -81,7 +83,10 @@ export async function POST(request: Request, { params }: Params) {
 
   const body = await request.json().catch(() => null);
   if (!body || !Array.isArray(body.responses)) {
-    return NextResponse.json({ error: "responses are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "responses are required" },
+      { status: 400 },
+    );
   }
 
   const submittedResponses = body.responses as SubmittedResponseItem[];
@@ -171,8 +176,14 @@ export async function POST(request: Request, { params }: Params) {
     }
 
     const questionKey = toQuestionKey(item);
-    const storageQuestionKey = toStorageQuestionKey(questionKey) || `q-${item.elementIndex}`;
+    const storageQuestionKey =
+      toStorageQuestionKey(questionKey) || `q-${item.elementIndex}`;
     const objectPath = `${form.id}/${insertedResponse.id}/${storageQuestionKey}.png`;
+
+    if (objectPath.includes("..")) {
+      throw new Error("Invalid file path");
+    }
+
     const { error: uploadError } = await serviceRole.storage
       .from("signatures")
       .upload(objectPath, parsed.buffer, {
@@ -232,7 +243,10 @@ export async function POST(request: Request, { params }: Params) {
     .insert(responseItemsToInsert);
 
   if (responseItemsError) {
-    return NextResponse.json({ error: responseItemsError.message }, { status: 500 });
+    return NextResponse.json(
+      { error: responseItemsError.message },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ ok: true });
