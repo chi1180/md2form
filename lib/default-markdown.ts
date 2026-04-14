@@ -4,6 +4,8 @@ export const DEFAULT_BUILDER_MARKDOWN = `${DEFAULT_FORM_FRONTMATTER_MARKDOWN}# N
 
 Describe your form.
 
+## Section.1
+
 ### Your Name
 #type short_text
 #required true
