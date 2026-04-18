@@ -9,14 +9,14 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "object-src 'none'",
   isProduction
-    ? "script-src 'self' 'unsafe-inline'"
-    : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+    ? "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com"
+    : "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https:",
+  "img-src 'self' data: blob: https: https://www.google-analytics.com",
   "font-src 'self' data:",
   isProduction
-    ? "connect-src 'self' https:"
-    : "connect-src 'self' https: ws: wss:",
+    ? "connect-src 'self' https: https://www.google-analytics.com https://region1.google-analytics.com"
+    : "connect-src 'self' https: ws: wss: https://www.google-analytics.com https://region1.google-analytics.com",
   "frame-src 'self' https:",
   isProduction ? "upgrade-insecure-requests" : null,
 ]
