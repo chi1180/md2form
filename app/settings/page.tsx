@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthNav } from "@/components/auth-nav";
+import { LegalLinks } from "@/components/legal-links";
 import { PageLoading } from "@/components/page-loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,7 +71,9 @@ export default function SettingsPage() {
 
       const { data: profile } = await supabase
         .from("user_profiles")
-        .select("billing_status,plan_tier,current_period_end,cancel_at_period_end")
+        .select(
+          "billing_status,plan_tier,current_period_end,cancel_at_period_end",
+        )
         .eq("user_id", authUser.id)
         .maybeSingle();
 
@@ -83,11 +86,15 @@ export default function SettingsPage() {
       }
 
       setBillingStatus(
-        typeof profile?.billing_status === "string" ? profile.billing_status : "none",
+        typeof profile?.billing_status === "string"
+          ? profile.billing_status
+          : "none",
       );
 
       setCurrentPeriodEnd(
-        typeof profile?.current_period_end === "string" ? profile.current_period_end : null,
+        typeof profile?.current_period_end === "string"
+          ? profile.current_period_end
+          : null,
       );
 
       setCancelAtPeriodEnd(profile?.cancel_at_period_end === true);
@@ -119,7 +126,9 @@ export default function SettingsPage() {
       }
       window.location.href = json.url;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to open checkout.");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to open checkout.",
+      );
     } finally {
       setRedirectingBilling(false);
     }
@@ -135,7 +144,11 @@ export default function SettingsPage() {
       }
       window.location.href = json.url;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to open billing portal.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to open billing portal.",
+      );
     } finally {
       setRedirectingBilling(false);
     }
@@ -166,7 +179,8 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <p>
-              <span className="text-muted-foreground">Email:</span> {user?.email || "Unknown"}
+              <span className="text-muted-foreground">Email:</span>{" "}
+              {user?.email || "Unknown"}
             </p>
             <p>
               <span className="text-muted-foreground">User ID:</span> {user?.id}
@@ -180,13 +194,16 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <p>
-              <span className="text-muted-foreground">Current plan:</span> {planTier.toUpperCase()}
+              <span className="text-muted-foreground">Current plan:</span>{" "}
+              {planTier.toUpperCase()}
             </p>
             <p>
-              <span className="text-muted-foreground">Form usage:</span> {formCount} / {getFormLimitByPlan(planTier)}
+              <span className="text-muted-foreground">Form usage:</span>{" "}
+              {formCount} / {getFormLimitByPlan(planTier)}
             </p>
             <p>
-              <span className="text-muted-foreground">Billing status:</span> {billingStatus}
+              <span className="text-muted-foreground">Billing status:</span>{" "}
+              {billingStatus}
             </p>
             <p>
               <span className="text-muted-foreground">Current period end:</span>{" "}
@@ -207,7 +224,11 @@ export default function SettingsPage() {
                   {redirectingBilling ? "Opening..." : "Upgrade to Pro"}
                 </Button>
               ) : (
-                <Button variant="outline" onClick={handleManageBilling} disabled={redirectingBilling}>
+                <Button
+                  variant="outline"
+                  onClick={handleManageBilling}
+                  disabled={redirectingBilling}
+                >
                   {redirectingBilling ? "Opening..." : "Manage billing"}
                 </Button>
               )}
@@ -221,8 +242,22 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Use the sign out button in the top navigation to end your current session.
+              Use the sign out button in the top navigation to end your current
+              session.
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Legal</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-2 text-sm text-muted-foreground">
+              Please see below for the terms of service and the handling of
+              personal information.
+            </p>
+            <LegalLinks show="all" />
           </CardContent>
         </Card>
       </div>

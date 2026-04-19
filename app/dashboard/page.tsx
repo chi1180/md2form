@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthNav } from "@/components/auth-nav";
+import { LegalLinks } from "@/components/legal-links";
 import { PageLoading } from "@/components/page-loading";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { getFormLimitByPlan, type PlanTier } from "@/lib/plans";
@@ -91,14 +92,17 @@ export default function DashboardPage() {
     return <PageLoading message="Loading dashboard..." />;
   }
 
-  const totalResponses = forms.reduce((sum, form) => sum + form.response_count, 0);
+  const totalResponses = forms.reduce(
+    (sum, form) => sum + form.response_count,
+    0,
+  );
   const publicForms = forms.filter((form) => form.is_public).length;
   const formLimit = getFormLimitByPlan(planTier);
   const usage = `${forms.length} / ${formLimit}`;
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-6">
+    <main className="min-h-screen max-w-6xl mx-auto px-6 py-6 flex flex-col justify-between bg-background text-foreground">
+      <div className="flex w-full flex-col gap-6">
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Dashboard</h1>
@@ -112,21 +116,29 @@ export default function DashboardPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Form usage ({planTier.toUpperCase()})</CardTitle>
+              <CardTitle className="text-base">
+                Form usage ({planTier.toUpperCase()})
+              </CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold">{usage}</CardContent>
+            <CardContent className="text-2xl font-semibold">
+              {usage}
+            </CardContent>
           </Card>
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Public forms</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold">{publicForms}</CardContent>
+            <CardContent className="text-2xl font-semibold">
+              {publicForms}
+            </CardContent>
           </Card>
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Total responses</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold">{totalResponses}</CardContent>
+            <CardContent className="text-2xl font-semibold">
+              {totalResponses}
+            </CardContent>
           </Card>
         </div>
 
@@ -142,16 +154,21 @@ export default function DashboardPage() {
           <CardContent className="space-y-4">
             {forms.length >= formLimit && (
               <p className="text-sm text-muted-foreground">
-                You reached your current plan limit. Delete an existing form to create a new one.
+                You reached your current plan limit. Delete an existing form to
+                create a new one.
               </p>
             )}
 
             {error && (
-              <p className="text-sm text-muted-foreground">Could not load forms: {error}</p>
+              <p className="text-sm text-muted-foreground">
+                Could not load forms: {error}
+              </p>
             )}
 
             {!error && forms.length === 0 && (
-              <p className="text-sm text-muted-foreground">No forms yet. Create your first form.</p>
+              <p className="text-sm text-muted-foreground">
+                No forms yet. Create your first form.
+              </p>
             )}
 
             {!error && forms.length > 0 && (
@@ -170,7 +187,10 @@ export default function DashboardPage() {
                         </p>
                       </div>
                       <Button variant="outline" size="icon" asChild>
-                        <Link href={`/forms/${form.id}`} aria-label={`Open ${form.title}`}>
+                        <Link
+                          href={`/forms/${form.id}`}
+                          aria-label={`Open ${form.title}`}
+                        >
                           <ArrowRight className="h-4 w-4" />
                         </Link>
                       </Button>
@@ -203,6 +223,9 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <footer className="border-t py-2">
+        <LegalLinks show="all" />
+      </footer>
     </main>
   );
 }

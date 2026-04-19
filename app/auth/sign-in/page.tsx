@@ -46,7 +46,8 @@ function SignInPageInner() {
       toast.success("Signed in successfully.");
       router.replace(next);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to sign in.";
+      const message =
+        error instanceof Error ? error.message : "Failed to sign in.";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -70,32 +71,8 @@ function SignInPageInner() {
 
       toast.success("Magic link sent. Check your inbox.");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to send magic link.";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignUp = async () => {
-    setLoading(true);
-
-    try {
-      const supabase = createSupabaseBrowserClient();
-      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: redirectTo },
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      toast.success("Account created. Check your inbox if confirmation is required.");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to sign up.";
+      const message =
+        error instanceof Error ? error.message : "Failed to send magic link.";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -124,6 +101,7 @@ function SignInPageInner() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
               />
+
               <Button className="w-full" type="submit" disabled={loading}>
                 {loading ? "Signing in..." : "Sign in with password"}
               </Button>
@@ -136,18 +114,20 @@ function SignInPageInner() {
               >
                 Send magic link instead
               </Button>
-              <Button
-                className="w-full"
-                variant="outline"
-                type="button"
-                disabled={loading || email.trim().length === 0 || password.trim().length < 8}
-                onClick={handleSignUp}
-              >
-                Create account
-              </Button>
               <Button className="w-full" variant="outline" asChild>
                 <Link href="/">Back to home</Link>
               </Button>
+
+              <p className="pt-1 text-center text-sm text-muted-foreground">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href={`/auth/sign-up?next=${encodeURIComponent(next)}`}
+                  className="text-primary underline underline-offset-2"
+                >
+                  Sign up here
+                </Link>
+                .
+              </p>
             </form>
           </CardContent>
         </Card>

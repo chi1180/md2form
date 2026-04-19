@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { AuthNav } from "@/components/auth-nav";
+import { LegalLinks } from "@/components/legal-links";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LucideExternalLink } from "lucide-react";
 
 export default function Home() {
   return (
@@ -17,24 +19,32 @@ export default function Home() {
         <section className="flex flex-1 items-center py-16">
           <div className="grid w-full gap-10 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="space-y-6">
-              <p className="text-sm text-muted-foreground">Markdown-first Form Builder</p>
+              <p className="text-sm text-muted-foreground">
+                Markdown-first Form Builder
+              </p>
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight md:text-5xl">
                 Write forms in Markdown, share instantly, and analyze responses.
               </h1>
               <p className="max-w-2xl text-base text-muted-foreground">
-                md2form helps teams create public forms without UI-heavy builders.
-                Draft in Markdown, publish with a link, and monitor trends from a
-                private dashboard.
+                md2form helps teams create public forms without UI-heavy
+                builders. Draft in Markdown, publish with a link, and monitor
+                trends from a private dashboard.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 <Button asChild>
-                  <Link href="/dashboard">Open Dashboard</Link>
-                </Button>
-                <Button variant="secondary" asChild>
-                  <Link href="/settings">Account settings</Link>
+                  <Link href="/auth/sign-up">Sign up</Link>
                 </Button>
                 <Button variant="outline" asChild>
-                  <Link href="/playground">Try Playground</Link>
+                  <Link href="/auth/sign-in">Sign in</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/dashboard">Open Dashboard</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/playground">
+                    <p>Try Playground</p>
+                    <LucideExternalLink />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -44,8 +54,14 @@ export default function Home() {
                 <h2 className="text-lg font-semibold">What you get</h2>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li>Public form links with anonymous response submission</li>
-                  <li>Owner-only response list with signature preview via signed URLs</li>
-                  <li>Built-in analytics for trends, choice distribution, and numeric stats</li>
+                  <li>
+                    Owner-only response list with signature preview via signed
+                    URLs
+                  </li>
+                  <li>
+                    Built-in analytics for trends, choice distribution, and
+                    numeric stats
+                  </li>
                 </ul>
                 <div className="pt-2">
                   <Button variant="secondary" asChild>
@@ -56,6 +72,10 @@ export default function Home() {
             </Card>
           </div>
         </section>
+
+        <footer className="border-t py-4">
+          <LegalLinks show="all" />
+        </footer>
       </div>
     </main>
   );

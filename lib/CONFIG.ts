@@ -23,3 +23,17 @@ font: "${DEFAULT_FORM_FRONTMATTER.font}"
 ---
 
 `;
+
+export const LEGAL_DATA = {
+  "terms-of-service": {
+    established_at: "2026 4/19",
+    last_updated: "2026 4/19",
+  },
+  "privacy-policy": {
+    established_at: "2026 4/19",
+    last_updated: "2026 4/19",
+  },
+  "owner-info": {
+    email: "c205297@gmail.com",
+  },
+};
