@@ -4,8 +4,6 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -67,8 +65,6 @@ export default function RootLayout({
           <Toaster richColors position="top-right" />
         </ThemeProvider>
         {GAID && <GoogleAnalytics gaId={GAID} />}
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
