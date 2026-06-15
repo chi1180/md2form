@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@theme {
+  --color-bg-primary: #eaeaea;
+  --color-bg-secondary: #d9d9d9;
+  --color-text-primary: #1a1a1a;
+  --color-accent-red: #ba3434;
+  --color-accent-blue: #3c5496;
+}
 
-  scroll-behavior: smooth;
+body {
+  margin: 0;
 }
 
 html,
